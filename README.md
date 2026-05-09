@@ -1,0 +1,1 @@
+# zelda-fishing-idle
