@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Zelda Fishing Idle</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="css2.css" rel="stylesheet">
+</head>
+<body>
+<script src="chs.js"></script>
+<script src="core.js"></script>
+  <div id="side-counters">
+    <div id="xp-bar" style="display:flex;align-items:center;gap:0.7em;margin-bottom:0.7em;width:100%;background:rgba(24, 28, 36, 0.95);padding:0.5em;border-radius:8px;border:2px solid #7de2fc;box-sizing:border-box;">
+      <div style="position:relative;">
+        <img src="assets/xp.png" alt="xp" class="counter-icon" style="margin-right:0;height:2.5em;" />
+        <span id="xp-level" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Press Start 2P',Arial,sans-serif;font-size:0.8em;color:#fff;text-shadow:1px 1px 0 #000;pointer-events:none;">1</span>
+      </div>
+      <div id="xp-progress-container" style="flex:1;height:20px;background:#181c24;border:2px solid #2a2f44;border-radius:10px;overflow:hidden;position:relative;">
+        <div id="xp-progress" style="height:100%;width:0%;background:linear-gradient(90deg,#7de2fc,#b9b6e5 90%);transition:width 0.3s;position:absolute;top:0;left:0;"></div>
+        <span id="xp-progress-text" style="position:absolute;width:100%;text-align:center;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Press Start 2P',Arial,sans-serif;font-size:0.65em;color:#fff;text-shadow:1px 1px 0 #000;z-index:20;pointer-events:none;white-space:nowrap;">0/100</span>
+      </div>
+    </div>
+    
+    <div id="rupee-counter" style="background:rgba(24, 28, 36, 0.95);padding:0.5em 0.4em;border:2px solid #ffd700;border-radius:8px;display:flex;align-items:center;gap:0.4em;font-family:'Press Start 2P',Arial,sans-serif;font-size:1em;color:#fff;text-shadow:1px 1px 0 #000;box-sizing:border-box;">
+      <img src="assets/coin.png" alt="coin" style="height:1.5em;image-rendering:pixelated;" /><span id="coin-count">0</span>
+    </div>
+    
+    <div id="mon-counter" style="background:rgba(24, 28, 36, 0.95);padding:0.5em 0.4em;border:2px solid #a78bfa;border-radius:8px;display:flex;align-items:center;gap:0.4em;font-family:'Press Start 2P',Arial,sans-serif;font-size:1em;color:#fff;text-shadow:1px 1px 0 #000;box-sizing:border-box;">
+      <img src="assets/gem.png" alt="gem" style="height:1.5em;image-rendering:pixelated;" /><span id="gem-count">0</span>
+    </div>
+    
+    <div id="lifetime-fish-container" style="background:rgba(24, 28, 36, 0.95);padding:0.8em 1em;border:2px solid #23d160;border-radius:8px;display:flex;align-items:center;gap:0.6em;font-family:'Press Start 2P',Arial,sans-serif;font-size:1em;color:#ffd700;text-shadow:1px 1px 0 #000;">
+      <img src="assets/fish.png" alt="fish" style="height:1.5em;image-rendering:pixelated;" /><span id="lifetime-fish-count">0</span>
+    </div>
+
+    <div id="spot-indicator" style="background:rgba(24, 28, 36, 0.95);padding:0.6em 0.8em;border:2px solid #c4b5fd;border-radius:8px;font-family:'Press Start 2P',Arial,sans-serif;font-size:0.85em;color:#c4b5fd;text-shadow:1px 1px 0 #000;display:flex;align-items:center;gap:0.5em;" title="Current fishing spot">
+      <svg viewBox="0 0 24 24" width="1.2em" height="1.2em" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 3.8l7.4 13.2H4.6L12 5.8z"/></svg> <span id="spot-name">Lake Hylia</span>
+    </div>
+
+    <div id="luck-container" style="background:rgba(24, 28, 36, 0.95);padding:0.6em 0.8em;border:2px solid #4ade80;border-radius:8px;font-family:'Press Start 2P',Arial,sans-serif;font-size:0.85em;color:#4ade80;text-shadow:1px 1px 0 #000;display:flex;align-items:center;gap:0.5em;">
+      <svg width="1.2em" height="1.2em" viewBox="-0.9 -0.9 31.69 31.69"><path fill="#4ade80" d="M14.308,13.048c0.355,0.35,0.924,0.35,1.28,0c1.22-1.203,3.813-3.803,4.451-4.792c0.908-1.406,1.812-2.566,1.812-4.591S20.211,0,18.186,0c-1.416,0-2.63,0.812-3.24,1.987C14.336,0.812,13.123,0,11.707,0C9.682,0,8.042,1.64,8.042,3.665S8.947,6.85,9.854,8.256C10.495,9.244,13.088,11.845,14.308,13.048z"/><path fill="#4ade80" d="M15.587,16.848c-0.355-0.351-0.925-0.351-1.28,0c-1.22,1.202-3.813,3.804-4.452,4.791c-0.907,1.406-1.813,2.566-1.813,4.593c0,2.023,1.64,3.663,3.665,3.663c1.416,0,2.63-0.812,3.24-1.985c0.611,1.175,1.824,1.985,3.24,1.985c2.024,0,3.665-1.64,3.665-3.663c0-2.025-0.904-3.187-1.812-4.593C19.402,20.65,16.807,18.049,15.587,16.848z"/><path fill="#4ade80" d="M27.908,14.947c1.174-0.61,1.985-1.824,1.985-3.24c0-2.025-1.64-3.665-3.664-3.666c-2.024,0-3.186,0.906-4.592,1.813c-0.987,0.639-3.59,3.232-4.792,4.452c-0.351,0.355-0.351,0.924,0,1.279c1.202,1.22,3.805,3.813,4.792,4.453c1.406,0.907,2.566,1.812,4.592,1.812c2.023,0,3.664-1.642,3.664-3.666C29.896,16.771,29.083,15.557,27.908,14.947z"/><path fill="#4ade80" d="M13.048,15.587c0.35-0.354,0.35-0.925,0-1.28c-1.203-1.22-3.804-3.813-4.792-4.452C6.851,8.948,5.69,8.042,3.667,8.042c-2.025,0-3.665,1.641-3.665,3.666c0,1.416,0.813,2.63,1.987,3.24c-1.175,0.61-1.987,1.823-1.987,3.239c0,2.023,1.64,3.663,3.665,3.665c2.024,0,3.185-0.905,4.59-1.812C9.245,19.4,11.845,16.807,13.048,15.587z"/></svg>
+      Luck: <span id="luck-percentage">0</span>%
+    </div>
+
+    <div id="reel-speed-container" style="background:rgba(24, 28, 36, 0.95);padding:0.6em 0.8em;border:2px solid #7de2fc;border-radius:8px;font-family:'Press Start 2P',Arial,sans-serif;font-size:0.85em;color:#7de2fc;text-shadow:1px 1px 0 #000;display:flex;align-items:center;gap:0.5em;" title="Reel Progress Multiplier">
+      <img src="assets/speed.png" alt="Speed" style="width:1.2em;height:1.2em;image-rendering:pixelated;" />
+      Reel: <span id="reel-speed-level"></span>
+    </div>
+
+    <div id="shiny-pull-container" style="background:rgba(24, 28, 36, 0.95);padding:0.6em 0.8em;border:2px solid #ffd700;border-radius:8px;font-family:'Press Start 2P',Arial,sans-serif;font-size:0.85em;color:#ffd700;text-shadow:1px 1px 0 #000;display:flex;flex-direction:column;align-items:center;gap:0.4em;" title="Catches until next guaranteed Shiny fish">
+      <div style="display:flex;align-items:center;gap:0.4em;">
+        <span class="shiny-glow"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M12 2l2.4 7.6H22l-6.2 4.5 2.4 7.6-6.2-4.5-6.2 4.5 2.4-7.6L2 9.6h7.6L12 2z"/></svg></span>
+        <span id="shiny-pull-count">500</span> Catches
+      </div>
+      <div style="width:100%;height:6px;background:#181c24;border-radius:3px;overflow:hidden;border:1px solid rgba(255,215,0,0.3);">
+        <div id="shiny-pity-bar-fill" style="height:100%;width:0%;background:linear-gradient(90deg,#ffd700,#fff176);border-radius:3px;transition:width 0.3s;"></div>
+      </div>
+    </div>
+
+    <div id="token-counter" style="background:rgba(24, 28, 36, 0.95);padding:0.6em 0.8em;border:2px solid #ffd700;border-radius:8px;font-family:'Press Start 2P',Arial,sans-serif;font-size:0.85em;color:#ffd700;text-shadow:1px 1px 0 #000;display:none;align-items:center;gap:0.5em;" title="Prestige Tokens">
+      <svg viewBox="0 0 24 24" width="1.2em" height="1.2em" fill="currentColor"><path d="M12 2L2 22h20L12 2z"/></svg> <span id="token-count">0</span> tokens
+    </div>
+  </div>
+
+<nav class="navbar">
+  <button id="mobile-menu-btn" class="pixel-btn" style="display:none; padding: 0.6em 0.8em; margin-right: 10px;">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+  </button>
+  <div class="nav-tabs-container" id="nav-tabs-container">
+    <button class="tab-btn pixel-btn active" data-tab="fishing">Fishing</button>
+    <button class="tab-btn pixel-btn" data-tab="spots">Spots</button>
+    <button class="tab-btn pixel-btn" data-tab="quests">Quests</button>
+    <button class="tab-btn pixel-btn" data-tab="inventory">Inventory</button>
+    <button class="tab-btn pixel-btn" data-tab="index">Index</button>
+    <button class="tab-btn pixel-btn" data-tab="upgrade">Upgrades</button>
+    <button class="tab-btn pixel-btn" data-tab="potions">Potions</button>
+    <button class="tab-btn pixel-btn" data-tab="relics">Triforce</button>
+    <button class="tab-btn pixel-btn" data-tab="prestige-tree">Prestige</button>
+    <button class="tab-btn pixel-btn" data-tab="mastery">Achievements</button>
+    <button class="tab-btn pixel-btn" data-tab="crates">Chests</button>
+    <button class="tab-btn pixel-btn" data-tab="shop">Shop</button>
+  </div>
+  <div style="margin-left: auto;"></div>
+  <button id="settings-btn" class="pixel-btn">
+    <span style="display: flex; align-items: center; justify-content: center;">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+    </span>
+  </button>
+</nav>
+
+<div id="settings-panel" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#23283a;border:4px solid #00e5ff;box-shadow:0 2px 32px #000c;padding:2em;z-index:3000;border-radius:12px;width:90%;max-width:400px;box-sizing:border-box;">
+  <h2 style="color:#00e5ff;font-family:'Press Start 2P',Arial,sans-serif;font-size:1.1em;margin-top:0;">Settings</h2>
+  <button id="close-settings-btn" class="pixel-btn" style="position:absolute;top:12px;right:16px;font-size:1em;">X</button>
+  <div style="margin-top:1.2em;margin-bottom:1.2em;display:flex;align-items:center;gap:1em;">
+    <label for="music-volume" style="color:#00e5ff;font-family:'Press Start 2P',Arial,sans-serif;font-size:0.85em;">Music</label>
+    <input type="range" id="music-volume" min="0" max="1" step="0.01" style="flex:1;" />
+  </div>
+  <div style="margin-top:1.2em;margin-bottom:1.2em;display:flex;align-items:center;gap:1em;">
+    <label for="ui-volume" style="color:#00e5ff;font-family:'Press Start 2P',Arial,sans-serif;font-size:0.85em;">SFX</label>
+    <input type="range" id="ui-volume" min="0" max="1" step="0.01" style="flex:1;" />
+  </div>
+  <div style="margin-top:1.5em;border-top:1px solid #00e5ff;padding-top:0.8em;font-size:0.65em;color:#fff;font-family:'Press Start 2P',Arial,sans-serif;text-align:left;line-height:1.8;">
+    <div style="margin-bottom: 4px; display: flex; align-items: center; gap: 8px;"><svg viewBox="0 0 24 24" width="14" height="14" fill="#ffd700"><path d="M2 18h20v2H2v-2zm0-10l4 5 6-7 6 7 4-5v8H2V8z"/></svg> Shrine - Developer</div>
+    <div style="margin-bottom: 4px; display: flex; align-items: center; gap: 8px;"><svg viewBox="0 0 24 24" width="14" height="14" fill="#ff6b6b"><path d="M12 21.3l-1.4-1.3C5.4 15.4 2 12.3 2 8.5 2 5.4 4.4 3 7.5 3c1.7 0 3.4.8 4.5 2.1C13.1 3.8 14.8 3 16.5 3 19.6 3 22 5.4 22 8.5c0 3.8-3.4 6.9-8.6 11.5L12 21.3z"/></svg> Drew - Beta Tester</div>
+    <div style="display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="14" height="14"><path fill="#BF6952" d="M33.541 23.198c.364-1.578.243-3.266-.458-4.946a8.018 8.018 0 0 0-3.271-3.773c.318-1.192.234-2.475-.324-3.75c-.841-1.92-2.66-3.201-4.712-3.562c.249-.572.329-1.289.036-2.167c-1-3-5-1-8-4.999c-2.44 1.464-2.97 3.64-2.878 5.487c-2.421.412-3.8.936-3.8.936v.002a3.713 3.713 0 0 0-2.322 3.442c0 .879.318 1.676.828 2.312l-.692.258l.001.003c-2.33.871-3.975 2.976-3.975 5.439c0 1.047.3 2.027.82 2.878C1.971 22.027 0 24.781 0 28c0 4.418 3.691 8 8.244 8c3.269 0 6.559-.703 9.531-1.665C20.018 35.375 23.47 36 28.667 36A7.333 7.333 0 0 0 36 28.667a7.31 7.31 0 0 0-2.459-5.469z"/></svg> MissZombae - Beta Tester</div>  </div>
+</div>
+
+<main>
+  <section id="fishing" class="tab-content active">
+    <h2 style="text-align:center;font-size:1.5em;color:#00e5ff;margin-bottom:0.5em;letter-spacing:2px;">Zelda Fishing Idle</h2>
+    <div id="character-area">
+      <img src="assets/icon.png" alt="Fish Character" class="character-img" id="main-fish-img" />
+      <div id="fishing-status">Ready to fish!</div>
+      <div id="lure-info" style="font-family:'Press Start 2P',Arial,sans-serif;font-size:0.7em;color:#7de2fc;margin:0.4em 0 0.2em 0;text-align:center;min-height:1em;"></div>
+      <div id="combo-hud" style="display:none;font-family:'Press Start 2P',Arial,sans-serif;font-size:0.75em;color:#ff6b6b;text-shadow:0 0 8px #ff6b6b;text-align:center;margin:0.2em 0;animation:comboPulse 0.4s ease-out;"></div>
+      <div id="fish-caught">Fish caught: <span id="last-catch-count">0</span></div>
+      <div id="recent-fish-container" style="width:100%;max-width:340px;min-height:2em;margin:0.2em 0 0.5em 0;display:flex;flex-direction:column;align-items:center;gap:0.1em;box-sizing:border-box;"></div>
+      <button id="quick-sell-btn" class="pixel-btn" style="font-size:0.95em; padding: 0.8em 1.2em; background: #00bcd4; color: #fff; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; margin-top:0.5em; letter-spacing: 1px;">Quick Sell All</button>
+    </div>
+  </section>
+  <section id="spots" class="tab-content">
+    <h2>Fishing Spots</h2>
+    <p>Each spot has unique fish pools, slider speed, and rupee bonuses.<br>New spots unlock as you level up — and beyond.</p>
+    <div id="spots-list" class="list-container"></div>
+  </section>
+  <section id="quests" class="tab-content">
+    <h2>Daily Quests</h2>
+    <p>Three quests reset every day at midnight. Complete them for Mon and Rupee bonuses.</p>
+    <div id="quests-list" class="list-container"></div>
+  </section>
+  <section id="inventory" class="tab-content">
+    <h2>Inventory</h2>
+    <div class="inventory-search" style="margin-bottom:1em;display:flex;gap:0.5em;justify-content:center;">
+      <input type="text" id="fish-search" placeholder="Search fish..." style="padding:0.5em 1em;font-family:'Press Start 2P',Arial,sans-serif;font-size:0.85em;background:#181c24;color:#fff;border:2px solid #00e5ff;border-radius:4px;outline:none;width:100%;max-width:300px;box-sizing:border-box;">
+      <button id="search-btn" class="pixel-btn" style="padding:0.5em 1.2em;font-size:0.85em;">Search</button>
+      <button id="reset-filters-btn" class="pixel-btn" style="padding:0.5em 1.2em;font-size:0.85em;background:#23283a;border-color:#888;color:#eee;">Reset</button>
+    </div>
+    <div class="inventory-filters" style="display:flex;flex-wrap:wrap;gap:1em;justify-content:center;margin-bottom:1em;padding:0.5em;background:#1d2232;border-radius:4px;">
+      <label class="material-checkbox"><input type="checkbox" class="rarity-filter" data-rarity="Common"><span class="checkmark"></span><span style="color:#c3d8c4;">Common</span></label>
+      <label class="material-checkbox"><input type="checkbox" class="rarity-filter" data-rarity="Rare"><span class="checkmark"></span><span style="color:#63b3ed;">Rare</span></label>
+      <label class="material-checkbox"><input type="checkbox" class="rarity-filter" data-rarity="Unique"><span class="checkmark"></span><span style="color:#c084fc;">Unique</span></label>
+      <label class="material-checkbox"><input type="checkbox" class="rarity-filter" data-rarity="Epic"><span class="checkmark"></span><span style="color:#f6ad55;">Epic</span></label>
+      <label class="material-checkbox"><input type="checkbox" class="rarity-filter" data-rarity="Legendary"><span class="checkmark"></span><span style="color:#ffd700;">Legendary</span></label>
+      <label class="material-checkbox"><input type="checkbox" class="rarity-filter" data-rarity="Mythical"><span class="checkmark"></span><span style="color:#ff7eb3;">Mythical</span></label>
+      <label class="material-checkbox"><input type="checkbox" class="rarity-filter" data-rarity="Secret"><span class="checkmark"></span><span style="color:#00e5ff;text-shadow:0 0 8px #00e5ff,0 0 12px #00e5ff;">Secret</span></label>
+      <label class="material-checkbox"><input type="checkbox" id="shiny-filter"><span class="checkmark"></span><span class="shiny-glow">Shiny</span></label>
+    </div>
+    <div id="inventory-list" class="scrollable-list style-7">No items yet.</div>
+  </section>
+  <section id="upgrade" class="tab-content">
+    <h2>Upgrades</h2>
+    <div id="upgrade-list" class="list-container"></div>
+  </section>
+  <section id="index" class="tab-content">
+    <h2>Index</h2>
+    <div id="index-list" class="list-container"></div>
+  </section>
+  <section id="relics" class="tab-content">
+    <h2>Triforce</h2>
+    <div id="relics-list" class="list-container"></div>
+  </section>
+  <section id="prestige-tree" class="tab-content">
+    <h2>Prestige Upgrades</h2>
+    <p>Earn Tokens by reaching Max Level and Casting Off.<br>These upgrades are <span style="color:#ffd700;">permanent</span> — they survive every prestige reset.</p>
+    <div id="prestige-token-list" class="list-container"></div>
+  </section>
+  <section id="mastery" class="tab-content">
+    <h2>Achievements</h2>
+    <div id="mastery-list" class="list-container"></div>
+  </section>
+  <section id="crates" class="tab-content">
+    <h2>Chests</h2>
+    <div id="crates-list" class="list-container"></div>
+  </section>
+  <section id="shop" class="tab-content">
+    <h2>Shop</h2>
+    <div id="shop-list" class="list-container"></div>
+  </section>
+  <section id="potions" class="tab-content">
+    <h2>Potions</h2>
+    <div id="potions-list" class="list-container"></div>
+  </section>
+</main>
+<script type="module" src="script.js"></script>
+<audio id="bg-music" src="assets/song.mp3" loop></audio>
+<audio id="click-sound" src="assets/click.mp3"></audio>
+<audio id="close-sound" src="assets/close.mp3"></audio>
+<audio id="tick-sound" src="assets/tick.mp3"></audio>
+[incrementaldb_verification: IdleHero503]
+<!--客服 开始-->
+<script src="//g8hh.github.io/static/js/jquery.min.js"></script>
+<link rel="stylesheet" href="//g8hh.github.io/static/css/kf.css" type="text/css" media="screen" charset="utf-8">
+<script src="//g8hh.github.io/static/js/kf.js"></script>
+<!-- 客服 结束 -->
+<!--站长统计-->
+    <div style="display: none">
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?828597e93cee632465679b7ef35edfd5";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>    </div>
+</body>
+</html>

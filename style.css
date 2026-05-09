@@ -1,0 +1,184 @@
+/* ===========================
+   BASE STYLES
+=========================== */
+body { 
+  margin: 0; font-family: 'Press Start 2P', 'Segoe UI', Arial, sans-serif; 
+  background: #181c24 url('assets/bg_lake.png') no-repeat center center fixed; 
+  background-size: cover; color: #f1f1f1; image-rendering: pixelated; letter-spacing: 1px; 
+}
+body::before { 
+  content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+  z-index: 0; pointer-events: none; background: inherit; filter: blur(4px) brightness(0.9); opacity: 0.85; 
+}
+body > * { position: relative; z-index: 1; }
+p, .tab-content p { 
+  font-size: clamp(0.6rem, 1.2vw, 0.69rem); color: #ffffff !important; 
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 1), 0 0 4px rgba(0,0,0,0.8) !important; 
+  line-height: 1.6 !important; font-weight: normal; 
+}
+.inline-icon { width: 1.2em; height: 1.2em; vertical-align: text-bottom; image-rendering: pixelated; display: inline-block; }
+
+/* ===========================
+   PIXEL COMPONENTS
+=========================== */
+.pixel-art { image-rendering: pixelated; image-rendering: crisp-edges; }
+.pixel-btn { 
+  font-family: 'Press Start 2P', 'Segoe UI', Arial, sans-serif; font-size: 1em; padding: 0.5em 1.5em; 
+  border: 3px solid #00bcd4; background: #23283a; color: #ffffff; text-shadow: 1px 1px 0 rgba(0,0,0,0.8);
+  box-shadow: 2px 2px 0 #181c24; border-radius: 0; cursor: pointer; transition: background 0.2s, color 0.2s; box-sizing: border-box;
+}
+.pixel-btn.active, .pixel-btn:active { background: #00bcd4; color: #ffffff; box-shadow: 2px 2px 0 #00bcd4; }
+.pixel-btn:disabled { border-color: #555 !important; color: #aaa !important; background: #2a2a2a !important; text-shadow: none !important; cursor: not-allowed; box-shadow: none !important; }
+
+/* ===========================
+   RESPONSIVE NAVBAR
+=========================== */
+.navbar { display: flex; flex-wrap: nowrap; background: #222736; padding: 5px 10px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.5); position: sticky; top: 0; z-index: 2500; }
+.nav-tabs-container { display: flex; flex: 1; overflow-x: auto; overflow-y: hidden; white-space: nowrap; scrollbar-width: none; -webkit-overflow-scrolling: touch; gap: 4px; }
+.nav-tabs-container::-webkit-scrollbar { display: none; }
+.tab-btn { flex: 0 0 auto; background: none; border: none; color: #ffffff; font-weight: bold; font-size: clamp(0.55rem, 1.4vw, 0.85rem); padding: 0.8em 1.2em; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; text-transform: uppercase; }
+.tab-btn.active { border-bottom: 3px solid #00bcd4; background: #292f43; color: #00bcd4; text-shadow: none; }
+#settings-btn { flex: 0 0 auto; position: sticky; right: 0; z-index: 2600; background: #23283a; margin-left: 5px; padding: 0.6em 1em; box-shadow: -10px 0 15px rgba(24, 28, 36, 0.95); border-left: 2px solid #00bcd4; }
+
+/* ===========================
+   MAIN LAYOUT & DYNAMIC CARDS
+=========================== */
+main { max-width: 60vw; width: 90%; margin: 2em auto 100px auto; background: linear-gradient(135deg, rgba(35, 40, 58, 0.3), rgba(35, 40, 58, 0.1)); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5); padding: 2em; z-index: 1; box-sizing: border-box; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.tab-content h2 { color: #00bcd4; }
+#side-counters { position: fixed; left: 20px; top: 50%; transform: translateY(-50%); z-index: 2000; display: flex; flex-direction: column; gap: 1.5em; align-items: center; }
+
+.list-container { max-width: 800px; margin: 0 auto; }
+.scrollable-list { width: 100%; height: 60vh; max-height: 550px; overflow-y: auto; padding-right: 10px; margin-top: 0; box-sizing: border-box; }
+.list-item-card { display: flex; justify-content: space-between; align-items: center; gap: 1em; flex-wrap: wrap; background: rgba(0,0,0,0.3); padding: 1.2em; margin-bottom: 0.8em; border-radius: 8px; box-sizing: border-box; }
+.list-item-card > .card-content { flex: 1 1 200px; min-width: 0; }
+.list-item-card > .card-actions { display: flex; gap: 0.5em; flex-shrink: 0; justify-content: flex-end; margin-left: auto; flex-wrap: wrap; align-items: center; }
+
+#character-area { display: flex; flex-direction: column; align-items: center; gap: 1em; width: 100%; box-sizing: border-box; }
+.character-img { width: 120px; height: auto; margin-bottom: 1em; image-rendering: pixelated; border: 4px solid #181c24; box-shadow: 0 0 0 4px #23283a; }
+.counter-icon { height: 3em; vertical-align: middle; margin-right: 0.3em; image-rendering: pixelated; filter: drop-shadow(0 1px 2px #0008); }
+
+.shiny-glow { font-weight: bold; background: linear-gradient(90deg, #ff5e62, #ff9966, #f9d423, #23d160, #38a1db, #9b59b6, #ff5e62 60%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: rainbow-swipe 2s linear infinite; }
+@keyframes rainbow-swipe { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); opacity: 0.9; } }
+@keyframes npcSlideIn { from { opacity: 0; transform: translateX(-50%) translateY(12px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+/* ===========================
+   RESPONSIVE / MOBILE RULES
+=========================== */
+
+@media (max-width: 1024px) { main { max-width: 80vw; } }
+
+/* Dynamic HUD Restructure & Dropdown Menu */
+@media (max-width: 850px) {
+  html, body { overflow-x: hidden; max-width: 100%; }
+
+  .navbar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  #mobile-menu-btn { display: flex !important; align-items: center; justify-content: center; flex: 0 0 auto; }
+
+  #settings-btn { flex: 0 0 auto; margin-left: auto; position: relative; right: 0; }
+
+  .nav-tabs-container {
+    display: none;
+  }
+  .nav-tabs-container.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: #222736;
+    z-index: 3000;
+  }
+
+  #side-counters {
+    position: relative !important;
+    z-index: 2001 !important;
+    transform: none !important;
+    left: auto !important;
+    top: auto !important;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 0.5em !important;
+    margin: 15px auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+	box-sizing: border-box;
+  }
+
+  #xp-bar {
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    order: 1;
+  }
+
+  #rupee-counter, #mon-counter, #lifetime-fish-container {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    width: 0 !important;
+    justify-content: center !important;
+    order: 2;
+    font-size: 0.72em !important;
+    padding: 0.5em 0.2em !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    gap: 0.3em !important;
+  }
+
+  #spot-indicator {
+    flex: 0 0 100%;
+    width: 100%;
+    order: 3;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  #xp-bar * {
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  
+  #luck-container, #shiny-pull-container, #reel-speed-container, #token-counter { display: none !important; }
+
+  main {
+    margin-top: 10px;
+    width: 95%;
+    max-width: none;
+    padding: 1.5em 1em;
+  }
+}
+
+/* Deep Mobile Crevices */
+@media (max-width: 600px) {
+  .pixel-btn { font-size: 0.85em; padding: 0.6em 1em; }
+  .list-item-card { flex-direction: column !important; align-items: stretch !important; text-align: center; padding: 1em; }
+  .list-item-card > .card-actions { margin-left: 0 !important; width: 100%; justify-content: center; }
+  .list-item-card > .card-actions > button { flex: 1; min-width: 45%; padding: 0.8em 0.5em !important; }
+  .inventory-search { flex-direction: column; align-items: stretch; }
+  .inventory-search input, .inventory-search button { width: 100% !important; max-width: none !important; }
+  .inventory-filters label { flex: 1 1 30%; text-align: center; }
+  #fishing-minigame { width: 100% !important; }
+  /* Safe area inset prevents system bottom bar overlaps */
+  #fish-btn-container { bottom: max(15px, env(safe-area-inset-bottom)) !important; width: 95%; max-width: 100% !important; justify-content: center; }
+  #fish-btn, #auto-fish-btn { flex: 1; padding: 1em 0.5em !important; font-size: 1.2em !important; text-align: center; }
+  .notification-toast { max-width: 90vw !important; right: 5vw !important; left: 5vw !important; text-align: center; word-wrap: break-word; }
+}
